@@ -27,7 +27,7 @@
 				"DiscordNotificationsCore::onDiscordArticleMoved"
 			]
 		],
-		"AddNewAccount": [
+		"LocalUserCreated": [
 			[
 				"DiscordNotificationsCore::onDiscordNewUserAccount"
 			]
@@ -35,6 +35,11 @@
 		"BlockIpComplete": [
 			[
 				"DiscordNotificationsCore::onDiscordUserBlocked"
+			]
+		],
+		"UnblockUserComplete": [
+			[
+				"DiscordNotificationsCore::onDiscordUserUnblocked"
 			]
 		],
 		"UploadComplete": [
@@ -84,8 +89,10 @@
 		"DiscordNotificationWikiUrlEndingDeleteArticle": "action=delete",
 		"DiscordNotificationWikiUrlEndingHistory": "action=history",
 		"DiscordNotificationWikiUrlEndingDiff": "diff=prev&oldid=",
+		"DiscordNotificationWikiUrlEndingBlockList": "Special:BlockList/",
 		"DiscordNotificationNewUser": true,
 		"DiscordNotificationBlockedUser": true,
+		"DiscordNotificationUnblockedUser": true,
 		"DiscordNotificationAddedArticle": true,
 		"DiscordNotificationRemovedArticle": true,
 		"DiscordNotificationMovedArticle": true,
@@ -98,6 +105,7 @@
 		"DiscordNotificationAfterImportPage": true,
 		"DiscordIncludeDiffSize": true,
 		"DiscordShowNewUserFullName": true,
+		"DiscordNotificationSummaryForNewArticles": true,
 		"DiscordAvatarUrl": ""
 	},
 	"manifest_version": 1

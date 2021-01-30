@@ -130,7 +130,8 @@ class DiscordNotificationsCore {
 	 */
 	public static function onDiscordPageSaveComplete( $wikiPage, $user, $summary, $flags, $revisionRecord, $editResult ) {
 		global $wgDiscordNotificationEditedArticle, $wgDiscordIgnoreMinorEdits,
-			$wgDiscordNotificationAddedArticle, $wgDiscordIncludeDiffSize;
+			$wgDiscordNotificationAddedArticle, $wgDiscordIncludeDiffSize,
+			$wgDiscordNotificationSummaryForNewArticles;
 		$isNew = (bool)( $flags & EDIT_NEW );
 
 		if ( !$wgDiscordNotificationEditedArticle && !$isNew ) return true;
@@ -141,7 +142,7 @@ class DiscordNotificationsCore {
 			$message = self::msg( 'discordnotifications-article-created',
 			self::getDiscordUserText( $user ),
 			self::getDiscordArticleText( $wikiPage ),
-			$summary == "" ? "" : self::msg( 'discordnotifications-summary', $summary ) );
+			$wgDiscordNotificationSummaryForNewArticles ? self::msg( 'discordnotifications-summary', $summary ) : "" ); 
 			if ( $wgDiscordIncludeDiffSize ) {
 				$message .= " (" . self::msg( 'discordnotifications-bytes', $revisionRecord->getSize() ) . ")";
 			}
@@ -253,7 +254,7 @@ class DiscordNotificationsCore {
 		$message = self::msg( 'discordnotifications-article-deleted',
 			self::getDiscordUserText( $user ),
 			self::getDiscordArticleText( $article ),
-			$reason );
+			$reason == "" ? "" : self::msg( 'discordnotifications-reason', $reason ) );
 		self::pushDiscordNotify( $message, $user, 'article_deleted' );
 		return true;
 	}
@@ -270,7 +271,7 @@ class DiscordNotificationsCore {
 			self::getDiscordUserText( $user ),
 			self::getDiscordTitleText( $title ),
 			self::getDiscordTitleText( $newtitle ),
-			$reason );
+			$reason == "" ? "" : self::msg( 'discordnotifications-reason', $reason ) );
 		self::pushDiscordNotify( $message, $user, 'article_moved' );
 		return true;
 	}
@@ -279,15 +280,24 @@ class DiscordNotificationsCore {
 	 * Occurs after the protect article request has been processed.
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/ArticleProtectComplete
 	 */
-	public static function onDiscordArticleProtected( $article = null, $user = null, $protect = false, $reason = "", $moveonly = false ) {
+	public static function onDiscordArticleProtected( $article, $user, $limit, $reason ) {
 		global $wgDiscordNotificationProtectedArticle;
 		if ( !$wgDiscordNotificationProtectedArticle ) return;
-
+		
+		
+		// If page got unprotected, "edit" and "move" in $limit array are empty (in other cases there are string with group name), so we check that
+		if (empty($limit["edit"]) && empty($limit["move"])) {
+			$protect = False;
+		}
+		else {
+			$protect = True;
+		}
+				
 		$message = self::msg( 'discordnotifications-article-protected',
 			self::getDiscordUserText( $user ),
 			$protect ? self::msg( 'discordnotifications-article-protected-change' ) : self::msg( 'discordnotifications-article-protected-remove' ),
 			self::getDiscordArticleText( $article ),
-			$reason );
+			$reason == "" ? "" : self::msg( 'discordnotifications-reason', $reason ) );
 		self::pushDiscordNotify( $message, $user, 'article_protected' );
 		return true;
 	}
@@ -310,7 +320,7 @@ class DiscordNotificationsCore {
 	 * Called after a user account is created.
 	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/AddNewAccount
 	 */
-	public static function onDiscordNewUserAccount( $user, $byEmail ) {
+	public static function onDiscordNewUserAccount( $user, $autocreated ) {
 		global $wgDiscordNotificationNewUser, $wgDiscordShowNewUserFullName;
 
 		// Disable reporting of new user email and IP address
@@ -348,6 +358,8 @@ class DiscordNotificationsCore {
 		self::pushDiscordNotify( $message, $user, 'new_user_account' );
 		return true;
 	}
+	
+	
 
 	/**
 	 * Called when a file upload has completed.
@@ -410,6 +422,21 @@ class DiscordNotificationsCore {
 			$block->mExpiry,
 			"<" . self::parseurl( $wgDiscordNotificationWikiUrl . $wgDiscordNotificationWikiUrlEnding . $wgDiscordNotificationWikiUrlEndingBlockList ) . "|" . self::msg( 'discordnotifications-block-user-list' ) . ">." );
 		self::pushDiscordNotify( $message, $user, 'user_blocked' );
+		return true;
+	}
+
+	/**
+	 * Occurs after the request to unblock an IP or user has been processed
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/UnblockUserComplete
+	 */
+	public static function onDiscordUserUnblocked( Block $block, $user ) {
+		global $wgDiscordNotificationUnblockedUser;
+		if ( !$wgDiscordNotificationUnblockedUser ) return;
+
+		$message = self::msg( 'discordnotifications-unblock-user',
+			self::getDiscordUserText( $user ),
+			self::getDiscordUserText( $block->getTarget() )	);
+		self::pushDiscordNotify( $message, $user, 'user_unblocked' );
 		return true;
 	}
 
@@ -578,6 +605,9 @@ class DiscordNotificationsCore {
 				break;
 			case 'user_blocked':
 				$colour = 15217973;
+				break;
+			case 'user_unblocked':
+				$colour = 2993970;
 				break;
 			case 'flow':
 				$colour = 2993970;

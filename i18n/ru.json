@@ -1,0 +1,39 @@
+{
+    "@metadata": {
+        "authors": [
+			"GodMorduk"
+        ]
+    },
+    "discordnotifications-desc": "Отправляет оповещения в Дискорд при совершении определенных действий на сайте MediaWiki.",
+    "discordnotifications-block": "заблокировать",
+    "discordnotifications-groups": "группы",
+    "discordnotifications-talk": "обсуждение",
+    "discordnotifications-contribs": "вклад",
+    "discordnotifications-edit": "править",
+    "discordnotifications-delete": "удалить",
+    "discordnotifications-history": "история",
+    "discordnotifications-diff": "сравнить",
+    "discordnotifications-bytes": "$1 {{PLURAL:$1|байт|байт}}",
+    "discordnotifications-article-saved": "📝 $1 $2 страницу $3. $4",
+    "discordnotifications-article-saved-minor-edits": "внес малое изменение в",
+    "discordnotifications-article-saved-edit": "изменил",
+    "discordnotifications-article-created": "📄 $1 создал страницу $2. $3",
+    "discordnotifications-file-namespace": "Файл",
+    "discordnotifications-article-deleted": "❌ $1 удалил страницу $2. $3",
+    "discordnotifications-article-moved": "➡ $1 переименовал страницу $2 в $3. $4",
+    "discordnotifications-article-protected": "🔒 $1 $2 страницы $3. $4",
+    "discordnotifications-article-protected-change": "изменил защиту",
+    "discordnotifications-article-protected-remove": "убрал защиту",
+    "discordnotifications-new-user": "👥 Новый аккаунт $1 был только что создан $2.",
+    "discordnotifications-file-uploaded": "📤 $1 загрузил файл <$2|$3> (формат: $4, вес: $5 $6, описание: $7)",
+    "discordnotifications-block-user": "🚫 $1 заблокировал $2 $3 Закончится через: $4. $5",
+	"discordnotifications-unblock-user":"✅ $1 разблокировал $2.",
+    "discordnotifications-block-user-reason": "по причине",
+    "discordnotifications-block-user-list": "Список всех блокировок",
+    "discordnotifications-summary": "Описание изменений: $1.",
+	"discordnotifications-reason": "Причина: $1.",
+    "discordnotifications-view-user-rights": "Посмотреть или изменить права пользователя",
+    "discordnotifications-change-user-groups": "%s изменил группы пользователя %s. Новые группы: %s",
+    "discordnotifications-change-user-groups-with-old": "$1 изменил группы пользователя $2. Старые группы: $3. Новые группы: $4",
+    "discordnotifications-import-complete": "⤵️ Страница $1 была импортирована."
+}
